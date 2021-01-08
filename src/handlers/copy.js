@@ -3,6 +3,22 @@
 var path = require('path');
 var fs = require('fs-extra');
 
+function touch (filename) {
+
+	console.log('[touch]', filename);
+
+	const fs = require('fs');
+	const time = new Date();
+
+	try {
+	  fs.utimesSync(filename, time, time);
+	} catch (err) {
+	  fs.closeSync(fs.openSync(filename, 'w'));
+	}
+
+}
+
+
 function link (src, dest) {
 
 	console.log('[copy]', src, '->', dest);
@@ -37,6 +53,8 @@ module.exports = function (config) {
 				if (f.exists) {
 					if(!fs.existsSync(dest)) {
 						link(src, dest);	
+					} else {
+						touch(dest);
 					}
 				} else {
 					console.log('[delete]', dest);
