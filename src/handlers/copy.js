@@ -13,7 +13,7 @@ module.exports = function (config) {
 
 				if (f.exists) {
 					console.log('[copy]', src, '->', dest);
-					fs.copy(src, dest);
+					fs.link(src, dest);
 				} else {
 					console.log('[delete]', dest);
 					fs.remove(dest);
