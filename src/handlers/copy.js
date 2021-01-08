@@ -3,6 +3,29 @@
 var path = require('path');
 var fs = require('fs-extra');
 
+function link (src, dest) {
+
+	console.log('[copy]', src, '->', dest);
+
+	const parent = path.dirname(dest);
+	fs.ensureDir(parent, (err) => {
+
+		try {
+			fs.link(src, dest, (err) => {
+
+				if(err) {
+				console.log(err);
+				} else {
+					console.log('[success]', src, '->', dest);
+				}
+			});
+		} catch(e) {
+			console.log(e);
+		}
+
+	});
+}
+
 module.exports = function (config) {
 	return function (resp) {
 		for (var i in resp.files) {
@@ -12,8 +35,9 @@ module.exports = function (config) {
 				    dest = path.join(config.dest, f.name);
 
 				if (f.exists) {
-					console.log('[copy]', src, '->', dest);
-					fs.link(src, dest);
+					if(!fs.existsSync(dest)) {
+						link(src, dest);	
+					}
 				} else {
 					console.log('[delete]', dest);
 					fs.remove(dest);
